@@ -71,12 +71,12 @@ foreach ($Comp in $STRComp)
             $asset | Add-Member -MemberType NoteProperty -Name IP -Value $IP.IPAddress -force
                                                      
         #Create $path to out put .csv files into
-            $Path =  'C:\users\nicholas.i.keels\Desktop\OUQuery\output.csv'
+            $Path =  '.\output.csv'
 
         #Ouput values of $asset into .csv
-            $asset | Select-Object -property 'Hostname','Windows Version', 'IP Address'| export-csv -path $Path -Append
+            $asset | Select-Object -property 'Hostname','Windows Version','IP Address','Model Number','Machine Serial','HD Manufacturer','MAC Address' | export-csv -path $Path -Append
     }
 
 
-    else {$DComp | Out-File -filepath C:\users\nicholas.i.keels\Desktop\OUQuery\Failed.txt -append}
+    else {$DComp | Out-File -filepath .\Failed.txt -append}
 }

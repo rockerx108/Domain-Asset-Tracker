@@ -34,6 +34,9 @@ foreach ($Comp in $STRComp)
                    $HDSizeGB = [math]::round($HDSizeGB, 2)  
                 } 
 
+#Windows Version Number
+            $Winver = get-wmiobject -Class win32_operatingsystem -computername $Dcomp 
+
         #Computer SerialNumber
             $SN = get-wmiobject -class "win32_bios" -Computername $DComp 
 
@@ -60,18 +63,20 @@ foreach ($Comp in $STRComp)
                 'HD Serial' = $HDSN.SerialNumber.trim()
                 'Hostname' = $COMPHostname.Name
                 'MAC Address' = $MAC.MACAddress
+                'Windows Version' = $winver.version
+                'IP Address' = $IP.IPaddress
                 } 
 
             #Add IPAddress to $asset Object
             $asset | Add-Member -MemberType NoteProperty -Name IP -Value $IP.IPAddress -force
                                                      
         #Create $path to out put .csv files into
-            $Path =  ".\"+$COMPHostname.Name+"-"+$SN.SerialNumber+".csv" 
+            $Path =  'C:\users\nicholas.i.keels\Desktop\OUQuery\output.csv'
 
         #Ouput values of $asset into .csv
-            $asset | Select-Object -property 'Manufacturer', 'Model Number', 'Machine Serial', 'HD Manufacturer', 'HD Model#', 'HD Size', 'HD Serial', 'Hostname', 'MAC Address', 'IP' | export-csv -path $Path -Append
+            $asset | Select-Object -property 'Hostname','Windows Version', 'IP Address'| export-csv -path $Path -Append
     }
 
 
-    else {$DComp | Out-File -filepath .\Failed.txt -append}
+    else {$DComp | Out-File -filepath C:\users\nicholas.i.keels\Desktop\OUQuery\Failed.txt -append}
 }
